@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { AbstractControl, FormArray, FormGroup } from '@angular/forms';
 import { DeleteControlEvent } from '../../models/delete-control-event';
-import { Observable, Subscription } from 'rxjs';
-import { QuestionValueChangeEvent } from '../../models/question-value-change-event';
-import { distinctUntilChanged, map, startWith } from 'rxjs/operators';
+import { Observable, of, Subscription } from 'rxjs';
+import { TypeValueChanges } from '../../models/type-value-changes';
+import { startWith } from 'rxjs/operators';
 import { InputType } from '../../models/input-type.enum';
 
 @Component({
@@ -18,12 +18,10 @@ export class InputCreatorComponent implements OnInit, OnDestroy {
   @Input() nestedLevel: number;
   @Output() deleteClicked = new EventEmitter<DeleteControlEvent>();
   @Output() addSubInputClicked = new EventEmitter<FormGroup>();
-  @Output() typeValueChange = new EventEmitter<QuestionValueChangeEvent>();
-  conditionType: Observable<string>;
+  @Output() typeValueChange = new EventEmitter<TypeValueChanges>();
   parentType: Observable<InputType>;
   typeValueChangesSubscription: Subscription;
   inputTypes = InputType;
-
 
   get subInputsControls(): AbstractControl[] {
     const subInputFormArray = this.control.get('subInputs') as FormArray;
@@ -35,18 +33,7 @@ export class InputCreatorComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.listenToTypeChange();
-
-    this.conditionType = this.control.get('conditionType').valueChanges;
-
-    this.parentType = this.control.get('parentType').valueChanges;
-  }
-
-  listenToTypeChange(): void {
-    this.typeValueChangesSubscription = this.control.get('type')
-      .valueChanges
-      .subscribe((type: InputType) => {
-        this.emitTypeValueChange({ control: this.control, type });
-      });
+    this.initParentTypeObservable();
   }
 
   emitTypeValueChange({ control, type }) {
@@ -65,5 +52,25 @@ export class InputCreatorComponent implements OnInit, OnDestroy {
     this.typeValueChangesSubscription.unsubscribe();
   }
 
+  private initParentTypeObservable(): void {
+    const parentTypeControl = this.control.get('parentType');
 
+    if (parentTypeControl == null) {
+      this.parentType = of(null);
+      return;
+    }
+
+    this.parentType = parentTypeControl.valueChanges
+      .pipe(
+        startWith(parentTypeControl.value)
+      );
+  }
+
+  private listenToTypeChange(): void {
+    this.typeValueChangesSubscription = this.control.get('type')
+      .valueChanges
+      .subscribe((type: InputType) => {
+        this.emitTypeValueChange({ control: this.control, type });
+      });
+  }
 }

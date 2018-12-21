@@ -1,5 +1,5 @@
 export enum InputType {
-  Text = 'Text',
-  Number = 'Number',
-  Boolean = 'Yes/No'
+  Text = 'text',
+  Number = 'number',
+  Boolean = 'boolean'
 }

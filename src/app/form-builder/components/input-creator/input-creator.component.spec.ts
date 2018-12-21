@@ -1,13 +1,12 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { InputCreatorComponent } from './input-creator.component';
-import { QuestionValueChangeEvent } from '../../models/question-value-change-event';
+import { TypeValueChanges } from '../../models/type-value-changes';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { GetEqualOptionsPipe } from '../../pipes/get-equal-options.pipe';
 import { InputType } from '../../models/input-type.enum';
 import { DeleteControlEvent } from '../../models/delete-control-event';
-import { emit } from 'cluster';
-import { Subscription } from 'rxjs';
+import { skip } from 'rxjs/operators';
 
 describe('InputCreatorComponent', () => {
   let component: InputCreatorComponent;
@@ -30,8 +29,16 @@ describe('InputCreatorComponent', () => {
     expect(component).toBeTruthy();
   });
 
+  it('should parentType emit null', () => {
+    component.control = null;
+    component.typeValueChange.subscribe(value => {
+      expect(value).toBeNull();
+    });
+  });
+
+
   describe('emitTypeValueChange', () => {
-    let eventToEmit: QuestionValueChangeEvent;
+    let eventToEmit: TypeValueChanges;
 
     beforeEach(() => {
       eventToEmit = {
@@ -43,8 +50,7 @@ describe('InputCreatorComponent', () => {
     it('emmited event has to be equal with passed object', () => {
 
 
-      component.typeValueChange.subscribe((event: QuestionValueChangeEvent) => {
-        expect(event.control).toBe(eventToEmit.control);
+      component.typeValueChange.subscribe((event: TypeValueChanges) => {
 
         expect(event).toEqual(eventToEmit);
         // We have synchronous eventEmmiter that's why we don't have to use done or something like this
@@ -55,7 +61,7 @@ describe('InputCreatorComponent', () => {
 
     it('should emit typeValueChangeEvent and control reference should be the same', () => {
 
-      component.typeValueChange.subscribe((event: QuestionValueChangeEvent) => {
+      component.typeValueChange.subscribe((event: TypeValueChanges) => {
         expect(event.control).toBe(eventToEmit.control);
       });
 
@@ -116,14 +122,15 @@ describe('InputCreatorComponent', () => {
 
   });
 
-  describe(('inputCreator component state after initialization'), () => {
+  describe(('when is initialized'), () => {
     let control;
     let newValue;
+    const initVal = 'initVal';
     beforeEach(() => {
       control = new FormGroup({
-        conditionType: new FormControl(),
-        parentType: new FormControl(),
-        type: new FormControl()
+        type: new FormControl(initVal),
+        parentType: new FormControl(initVal),
+        conditionType: new FormControl(initVal)
       });
 
       newValue = {
@@ -137,21 +144,17 @@ describe('InputCreatorComponent', () => {
 
     });
 
-    it('conditionType field should emit values on form change', function () {
-      component.control = control;
-      component.ngOnInit();
-      component.conditionType.subscribe(valueChanges => {
-        expect(valueChanges).toEqual(newValue.conditionType);
+    it('should paretType emit initial value', () => {
+      component.parentType.subscribe(valueChanges => {
+        expect(valueChanges).toEqual('initVal');
       });
-
-      component.control.patchValue(newValue);
 
     });
 
-
-    it('parentType field should emit values on form change', function () {
-
-      component.parentType.subscribe(valueChanges => {
+    it('should parentType emit values on form change', () => {
+      component.parentType.pipe(
+        skip(1)
+      ).subscribe(valueChanges => {
         expect(valueChanges).toEqual(newValue.parentType);
       });
 
@@ -160,20 +163,22 @@ describe('InputCreatorComponent', () => {
 
     it('should emit type value change on change type field', function () {
 
-      component.typeValueChange.subscribe((event: QuestionValueChangeEvent) => {
+      component.typeValueChange.subscribe((event: TypeValueChanges) => {
         expect(event.type).toEqual(newValue.type);
       });
 
       component.control.patchValue(newValue);
     });
 
-    it('typeValueChangesSubscription should be opened', () => {
+    it('should open typeValueChangesSubscription', () => {
       expect(component.typeValueChangesSubscription.closed).toBe(false);
     });
 
 
+    it('should unsubscribe typeValueChanges on destroy', function () {
+      component.ngOnDestroy();
+      expect(component.typeValueChangesSubscription.closed).toBe(true);
+    });
+
   });
-
-
-
 });

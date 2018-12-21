@@ -3,7 +3,7 @@
   display: flex;
   flex-direction: column;
   border: 1px solid #aaa;
-  box-shadow: 0 4px 8px 0 rgba(0,0,0,.2);
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, .2);
   margin: 20px 0;
 }
 
@@ -15,25 +15,25 @@
   position: relative;
 }
 
-.condition-type-wrapper {
-  display: flex;
-  width: 70%;
-}
+.condition-type {
+  &-wrapper {
+    display: flex;
+    width: 70%;
+  }
+  &-label {
+    display: flex;
+    align-items: center;
+    width: 95px;
+  }
 
-.condition-type-label {
-  display: flex;
-  align-items: center;
-  width: 95px;
+  &-input {
+    width: 100%;
+    padding: 12px 10px;
+    box-sizing: border-box;
+    border: 2px solid #aaa;
+    border-radius: 5px;
+  }
 }
-
-.condition-type-input {
-  width: 65%;
-  padding: 12px 10px;
-  box-sizing: border-box;
-  border: 2px solid #aaa;
-  border-radius: 5px;
-}
-
 .condition-value-input {
   width: 30%;
   padding: 12px 10px;
@@ -42,13 +42,12 @@
   border-radius: 5px;
 }
 
-
 .label {
   min-width: 95px;
   font-size: 16px;
   font-weight: bold;
-
 }
+
 .input {
   width: 100%;
   padding: 12px 10px;
@@ -57,71 +56,36 @@
   border-radius: 5px;
 }
 
-
 .actions {
   padding: 0 20px 13px 20px;
   align-self: flex-end;
 }
 
 
-.button {
-  margin-left: 20px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 100px;
-  border: 2px solid transparent;
-  border-radius: 4px;
-  height: 34px;
-  color: white;
-  padding:  0 10px;
+.select {
+  appearance: none;
 
-}
+  &-icon {
+    width: 50%;
+    transform: translate(43%, 58%);
+  }
 
-.button--danger {
-  background-color: #dc485a;
-  border-color: darken(#dc485a, 10%);
-  &:hover {
-    border-color: darken(#dc485a, 10%);
+  &-wrapper {
+    width: 100%;
+    position: relative;
   }
-  &:active {
-    background-color: darken(#dc485a, 20%)
-  }
-}
 
-.button--success {
-  background-color: #5cb85c;
-  &:hover {
-    border-color: darken(#5cb85c, 10%);
-  }
-  &:active {
-    background-color: darken(#5cb85c, 20%)
+  &-indicator {
+    position: absolute;
+    pointer-events: none;
+    top: 1px;
+    right: 0;
+    width: 40px;
+    height: 41px;
+    border-left: 2px solid #aaaaaa;
   }
 }
 
-.input-creator__condition--value {
-  width: 25%;
-  box-sizing: border-box;
-  padding-left: 10px;
+.condition-select {
+  width: 65%;
 }
-
-.select-indicator {
-  position: absolute;
-  pointer-events: none;
-  top: 1px;
-  right: 0;
-  width: 40px;
-  height: 41px;
-  border-left: 2px solid #aaaaaa;
-}
-
-.select-icon {
-  width: 50%;
-  transform: translate(43%,58%);
-}
-
-.select-wrapper {
-  width: 100%;
-  position: relative;
-}
-

@@ -8,13 +8,28 @@ export class GetEqualOptionsPipe implements PipeTransform {
 
   transform(parentType: InputType): any {
     switch (parentType) {
-      case InputType.Text:
-        return ['EQUALS'];
       case InputType.Boolean:
-        return ['EQUALS'];
+      case InputType.Text:
+        return [
+          {
+            type: 'equals',
+            display: 'Equals'
+          }
+        ];
       case InputType.Number:
-        return ['GREATER THEN', 'EQUALS', 'LESS THEN'];
-
+        return [
+          {
+            type: 'equals',
+            display: 'Equals'
+          }, {
+            type: 'greaterThen',
+            display: 'Greater then'
+          },
+          {
+            type: 'lessThan',
+            display: 'Less than'
+          }
+        ];
     }
   }
 

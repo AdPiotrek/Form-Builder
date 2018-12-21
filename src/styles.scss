@@ -1,1 +1,43 @@
 /* You can add global styles to this file, and also import other style files */
+$redColor: #dc485a;
+$greenColor: #5cb85c;
+
+.button {
+  margin-left: 20px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 100px;
+  border: 2px solid transparent;
+  border-radius: 4px;
+  height: 34px;
+  color: white;
+  padding: 0 10px;
+  &-danger {
+    background-color: $redColor;
+    border-color: darken($redColor, 10%);
+
+    &:hover {
+      background-color: darken($redColor, 10%);
+    }
+
+    &:active {
+      background-color: darken($redColor, 20%);
+      border-color: darken($redColor, 30%);
+    }
+  }
+
+  &-success {
+    background-color: $greenColor;
+    border-color: darken($greenColor, 10%);
+
+    &:hover {
+      background-color: darken($greenColor, 10%);
+    }
+
+    &:active {
+      background-color: darken($greenColor, 20%);
+      border-color: darken($greenColor, 30%);
+    }
+  }
+}

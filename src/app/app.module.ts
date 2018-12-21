@@ -5,17 +5,15 @@ import { ReactiveFormsModule } from '@angular/forms';
 
 import { AppComponent } from './app.component';
 import { FormBuilderComponent } from './form-builder/containers/form-builder/form-builder.component';
-import { InputCreatorComponent } from './form-builder/components/input-creator/input-creator.component';
-import { SubInputCreatorComponent } from './form-builder/components/sub-input-creator/sub-input-creator.component';
 import { GetEqualOptionsPipe } from './form-builder/pipes/get-equal-options.pipe';
+import { InputCreatorComponent } from './form-builder/components/input-creator/input-creator.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     FormBuilderComponent,
-    InputCreatorComponent,
-    SubInputCreatorComponent,
-    GetEqualOptionsPipe
+    GetEqualOptionsPipe,
+    InputCreatorComponent
   ],
   imports: [
     CommonModule,

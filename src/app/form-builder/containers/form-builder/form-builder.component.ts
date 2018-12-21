@@ -1,11 +1,12 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { DeleteControlEvent } from '../../models/delete-control-event';
-import { QuestionValueChangeEvent } from '../../models/question-value-change-event';
+import { TypeValueChanges } from '../../models/type-value-changes';
 import { StorageService } from '../../services/storage.service';
 import { map } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
 import { InputType } from '../../models/input-type.enum';
+import { InputCondition } from '../../models/input-condition';
 
 @Component({
   selector: 'app-form-builder',
@@ -29,11 +30,103 @@ export class FormBuilderComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.saveChanges();
     this.storageService.getForm()
-      .then((data) => this.fillInputWithOldData(this.inputsForm, data));
+      .then((data) => {
+        this.fillInputWithOldData(this.inputsForm, data);
+      });
   }
 
-  fillInputWithOldData(formGroup: FormGroup, data) {
-    console.log(data)
+  ngOnDestroy() {
+    this.formValueChangesSubscription.unsubscribe();
+  }
+
+  addNewInput() {
+    this.inputsFormArray.push(this.getNewInput());
+  }
+
+  addNewSubInputToControl(control) {
+    const controlSubInputsFormArray = control.get('subInputs') as FormArray;
+    controlSubInputsFormArray.push(this.getNewSubInput(control.value.type));
+  }
+
+  deleteControl({ control, index }: DeleteControlEvent): void {
+    const parentFormArray = control.parent as FormArray;
+    parentFormArray.removeAt(index);
+  }
+
+  patchConditionsInChildren({ control, type }: TypeValueChanges) {
+    const parentsFormArray = control.get('subInputs') as FormArray;
+
+    parentsFormArray.controls.forEach(controlOfArray => {
+
+      const subInputCondition = this.getConditionValues(type);
+
+      controlOfArray.patchValue({
+          parentType: type,
+          conditionType: subInputCondition.type,
+          conditionValue: subInputCondition.value
+        }
+      );
+    });
+  }
+
+  private saveChanges() {
+    this.formValueChangesSubscription = this.inputsForm.valueChanges.pipe(
+      map(formGroupValue => formGroupValue.subInputs)
+    ).subscribe(formValue => {
+      this.storageService.updateForm(formValue);
+    });
+  }
+
+  private getNewInput(): FormGroup {
+    return this.fb.group({
+      question: '',
+      condition: '',
+      type: InputType.Text,
+      subInputs: this.fb.array([]),
+    });
+  }
+
+  private getNewSubInput(type: InputType): FormGroup {
+
+    const subInputCondition = this.getConditionValues(type);
+
+    return this.fb.group({
+      parentType: type,
+      question: ['', Validators.required],
+      type: InputType.Text,
+      conditionType: subInputCondition.type,
+      conditionValue: subInputCondition.value,
+      subInputs: this.fb.array([]),
+    });
+  }
+
+  private getConditionValues(parentType: InputType): InputCondition {
+    let condition: InputCondition;
+
+    switch (parentType) {
+      case InputType.Text:
+        condition = {
+          type: 'EQUALS',
+          value: ''
+        };
+        break;
+      case InputType.Boolean:
+        condition = {
+          type: 'EQUALS',
+          value: false
+        };
+        break;
+      case InputType.Number:
+        condition = {
+          type: 'EQUALS',
+          value: 0
+        };
+    }
+
+    return condition;
+  }
+
+  private fillInputWithOldData(formGroup: FormGroup, data) {
     // In case of first visit
     if (data == null) {
       return;
@@ -52,105 +145,4 @@ export class FormBuilderComponent implements OnInit, OnDestroy {
       this.fillInputWithOldData(nestedFormGroup, input.subInputs);
     });
   }
-
-  addNewInput() {
-    this.inputsFormArray.push(this.getNewInput());
-  }
-
-  getNewInput(): FormGroup {
-    return this.fb.group({
-      'question': ['', Validators.required],
-      'condition': '',
-      'type': InputType.Text,
-      'subInputs': this.fb.array([]),
-    });
-  }
-
-  getNewSubInput(parentType: InputType): FormGroup {
-
-    let subInputConditons: { conditionType: string, conditionValue: string | number | boolean };
-
-    switch (parentType) {
-      case InputType.Text:
-        subInputConditons = {
-          conditionType: 'EQUALS',
-          conditionValue: '',
-        };
-        break;
-      case InputType.Boolean:
-        subInputConditons = {
-          conditionType: 'EQUALS',
-          conditionValue: false,
-        };
-        break;
-      case InputType.Number:
-        subInputConditons = {
-          conditionType: 'EQUALS',
-          conditionValue: 0,
-        };
-    }
-
-
-    return this.fb.group({
-      parentType,
-      question: ['', Validators.required],
-      type: InputType.Text,
-      ...subInputConditons,
-      'subInputs': this.fb.array([]),
-    });
-  }
-
-  addNewSubInputToControl(control) {
-    const controlSubInputsFormArray = control.get('subInputs') as FormArray;
-    controlSubInputsFormArray.push(this.getNewSubInput(control.value.type));
-  }
-
-  deleteControl({ control, index }: DeleteControlEvent): void {
-    const parentFormArray = control.parent as FormArray;
-    parentFormArray.removeAt(index);
-  }
-
-  patchConditionsInChildren({ control, type }: QuestionValueChangeEvent) {
-    const parentsFormArray = control.get('subInputs') as FormArray;
-
-    parentsFormArray.controls.forEach(controlOfArray => {
-
-      let subInputConditions: { conditionType: string, conditionValue: string | number | boolean };
-
-      switch (type) {
-        case InputType.Text:
-          subInputConditions = {
-            conditionType: 'EQUALS',
-            conditionValue: '',
-          };
-          break;
-        case InputType.Boolean:
-          subInputConditions = {
-            conditionType: 'EQUALS',
-            conditionValue: false,
-          };
-          break;
-        case InputType.Number:
-          subInputConditions = {
-            conditionType: 'EQUALS',
-            conditionValue: 0,
-          };
-      }
-
-      controlOfArray.patchValue({ parentType: type, ...subInputConditions });
-    });
-  }
-
-  saveChanges() {
-    this.formValueChangesSubscription = this.inputsForm.valueChanges.pipe(
-      map(formGroupValue => formGroupValue.subInputs)
-    ).subscribe(formValue => {
-      this.storageService.updateForm(formValue);
-    });
-  }
-
-  ngOnDestroy() {
-    this.formValueChangesSubscription.unsubscribe();
-  }
-
 }
