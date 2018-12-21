@@ -4,7 +4,7 @@ import { FormBuilderComponent } from './form-builder.component';
 import { FormArray, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { StorageService } from '../../services/storage.service';
 import { InputCreatorComponent } from '../../components/input-creator/input-creator.component';
-import { GetEqualOptionsPipe } from '../../pipes/get-equal-options.pipe';
+import { ConditionFromTypePipe } from '../../pipes/condition-from-type.pipe';
 import { InputType } from '../../models/input-type.enum';
 import { initialFormBuilderValue } from '../../mocks/initial-form-builder-value';
 
@@ -15,7 +15,7 @@ describe('FormBuilderComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [FormBuilderComponent, InputCreatorComponent, GetEqualOptionsPipe],
+      declarations: [FormBuilderComponent, InputCreatorComponent, ConditionFromTypePipe],
       providers: [StorageService],
       imports: [ReactiveFormsModule]
     })
@@ -51,7 +51,7 @@ describe('FormBuilderComponent', () => {
       parentType: InputType.Text,
       question: '',
       type: InputType.Text,
-      conditionType: 'EQUALS',
+      conditionType: 'equals',
       conditionValue: '',
       subInputs: [],
     };
@@ -71,7 +71,7 @@ describe('FormBuilderComponent', () => {
       parentType: InputType.Boolean,
       question: '',
       type: InputType.Text,
-      conditionType: 'EQUALS',
+      conditionType: 'equals',
       conditionValue: false,
       subInputs: []
     };
@@ -91,7 +91,7 @@ describe('FormBuilderComponent', () => {
       parentType: InputType.Number,
       question: '',
       type: InputType.Text,
-      conditionType: 'EQUALS',
+      conditionType: 'equals',
       conditionValue: 0,
       subInputs: []
     };

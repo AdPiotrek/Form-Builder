@@ -135,5 +135,8 @@
       }
     }
   },
-  "defaultProject": "SkyFormBuilder"
+  "defaultProject": "SkyFormBuilder",
+  "cli": {
+    "packageManager": "yarn"
+  }
 }

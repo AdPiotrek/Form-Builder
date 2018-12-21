@@ -1,3 +1,11 @@
+<header class="header">
+  Form Builder
+</header>
+
+<div *ngIf="inputsFormArray.controls.length === 0" class="empty-form">
+  Create new form !
+</div>
+
 <div class="creator-container">
   <app-input-creator *ngFor="let input of inputsFormArray.controls; let i = index"
                      [control]="input"
@@ -7,8 +15,9 @@
                      (addSubInputClicked)="addNewSubInputToControl($event)"
                      (typeValueChange)="patchConditionsInChildren($event)">
   </app-input-creator>
+
+  <button (click)="addNewInput()" class="button button-success input-button">
+    Add new input
+  </button>
 </div>
 
-<button (click)="addNewInput()" class="button button-success">
-  Add new input
-</button>

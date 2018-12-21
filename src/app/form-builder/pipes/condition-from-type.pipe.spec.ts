@@ -1,14 +1,14 @@
-import { GetEqualOptionsPipe } from './get-equal-options.pipe';
+import { ConditionFromTypePipe } from './condition-from-type.pipe';
 import { InputType } from '../models/input-type.enum';
 
-describe('GetEqualOptionsPipe', () => {
+describe('ConditionFromTypePipe', () => {
   it('create an instance', () => {
-    const pipe = new GetEqualOptionsPipe();
+    const pipe = new ConditionFromTypePipe();
     expect(pipe).toBeTruthy();
   });
 
   it('should return proper value for given text type', () => {
-    const transformedValue = new GetEqualOptionsPipe().transform(InputType.Text);
+    const transformedValue = new ConditionFromTypePipe().transform(InputType.Text);
 
     const expectedVal = [
       {
@@ -21,7 +21,7 @@ describe('GetEqualOptionsPipe', () => {
   });
 
   it('should return proper value for given boolean type', () => {
-    const transformedValue = new GetEqualOptionsPipe().transform(InputType.Boolean);
+    const transformedValue = new ConditionFromTypePipe().transform(InputType.Boolean);
 
     const expectedVal = [
       {
@@ -34,7 +34,7 @@ describe('GetEqualOptionsPipe', () => {
   });
 
   it('should return proper value for given number type', () => {
-    const transformedValue = new GetEqualOptionsPipe().transform(InputType.Number);
+    const transformedValue = new ConditionFromTypePipe().transform(InputType.Number);
 
     const expectedVal = [
       {

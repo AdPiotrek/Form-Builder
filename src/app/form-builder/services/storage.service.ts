@@ -24,7 +24,7 @@ export class StorageService implements OnDestroy {
 
     const transaction = idb.transaction(this.INPUT_STORAGE, 'readwrite');
 
-    let store = transaction.objectStore(this.INPUT_STORAGE);
+    const store = transaction.objectStore(this.INPUT_STORAGE);
 
     const updatedForm = await store.put(formObject, this.INPUT_STORAGE);
   }
@@ -35,7 +35,7 @@ export class StorageService implements OnDestroy {
 
     const transaction = idb.transaction(this.INPUT_STORAGE, 'readonly');
 
-    let store = transaction.objectStore(this.INPUT_STORAGE);
+    const store = transaction.objectStore(this.INPUT_STORAGE);
 
     return await store.get(this.INPUT_STORAGE);
 

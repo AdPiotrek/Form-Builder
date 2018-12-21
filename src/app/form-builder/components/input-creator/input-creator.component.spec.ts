@@ -3,7 +3,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { InputCreatorComponent } from './input-creator.component';
 import { TypeValueChanges } from '../../models/type-value-changes';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { GetEqualOptionsPipe } from '../../pipes/get-equal-options.pipe';
+import { ConditionFromTypePipe } from '../../pipes/condition-from-type.pipe';
 import { InputType } from '../../models/input-type.enum';
 import { DeleteControlEvent } from '../../models/delete-control-event';
 import { skip } from 'rxjs/operators';
@@ -14,7 +14,7 @@ describe('InputCreatorComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [InputCreatorComponent, GetEqualOptionsPipe],
+      declarations: [InputCreatorComponent, ConditionFromTypePipe],
       imports: [ReactiveFormsModule]
     })
       .compileComponents();

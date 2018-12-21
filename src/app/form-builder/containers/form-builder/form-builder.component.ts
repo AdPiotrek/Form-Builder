@@ -106,19 +106,19 @@ export class FormBuilderComponent implements OnInit, OnDestroy {
     switch (parentType) {
       case InputType.Text:
         condition = {
-          type: 'EQUALS',
+          type: 'equals',
           value: ''
         };
         break;
       case InputType.Boolean:
         condition = {
-          type: 'EQUALS',
+          type: 'equals',
           value: false
         };
         break;
       case InputType.Number:
         condition = {
-          type: 'EQUALS',
+          type: 'equals',
           value: 0
         };
     }

@@ -2,9 +2,9 @@ import { Pipe, PipeTransform } from '@angular/core';
 import { InputType } from '../models/input-type.enum';
 
 @Pipe({
-  name: 'getEqualOptions'
+  name: 'conditionFromType'
 })
-export class GetEqualOptionsPipe implements PipeTransform {
+export class ConditionFromTypePipe implements PipeTransform {
 
   transform(parentType: InputType): any {
     switch (parentType) {
