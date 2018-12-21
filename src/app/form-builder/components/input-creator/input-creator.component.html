@@ -1,0 +1,70 @@
+<div class="input-creator" [formGroup]="control" [ngStyle]="{'marginLeft.px': nestedLevel * 30}">
+  <div class="row" *ngIf="parentType | async">
+    <div class="condition-type-wrapper">
+      <label class="condition-type-label">Condition</label>
+      <div class="select-wrapper" style="width: 65%">
+        <select class="condition-type-input" style="width: 100%" type="text" formControlName="conditionType">
+          <option [value]="condition" *ngFor="let condition of parentType | async | getEqualOptions">
+            {{condition}}
+          </option>
+        </select>
+        <i class="select-indicator">
+          <img class="select-icon" alt="" src="assets/images/caret-down.svg"/>
+        </i>
+      </div>
+    </div>
+
+    <ng-container [ngSwitch]="parentType | async">
+      <input class="condition-value-input" type="text" formControlName="conditionValue" *ngSwitchCase="inputTypes.Text">
+
+      <ng-container *ngSwitchCase="inputTypes.Boolean">
+        <label>
+          Yes
+          <input type="radio" formControlName="conditionValue" [value]="true">
+        </label>
+        <label>
+          No
+          <input type="radio" formControlName="conditionValue" [value]="false">
+        </label>
+      </ng-container>
+
+      <input class="condition-value-input" type="number" formControlName="conditionValue" *ngSwitchCase="inputTypes.Number">
+    </ng-container>
+
+
+  </div>
+
+  <div class="row">
+    <label class="label">Question</label>
+    <input class="input" type="text" formControlName="question"/>
+  </div>
+  <div class="row">
+    <label class="label">Type</label>
+    <div class="select-wrapper">
+      <select class="input input-creator__input--select" type="text" formControlName="type">
+        <option [value]="inputTypes.Text"> {{inputTypes.Text}}</option>
+        <option [value]="inputTypes.Boolean">{{inputTypes.Boolean}}</option>
+        <option [value]="inputTypes.Number">{{inputTypes.Number}}</option>
+      </select>
+      <i class="select-indicator">
+        <img class="select-icon"  src="assets/images/caret-down.svg"/>
+      </i>
+    </div>
+
+
+  </div>
+
+  <div class="actions">
+    <button (click)="emitAddSubInputEvent(control)" class="button button--success">Add sub-input</button>
+    <a (click)="emitDeleteClickedEvent(control, index)" class="button button--danger"> Delete</a>
+  </div>
+</div>
+
+<app-input-creator *ngFor="let input of subInputsControls; let i = index"
+                   [control]="input"
+                   [index]="i"
+                   [nestedLevel]="nestedLevel + 1"
+                   (deleteClicked)="emitDeleteClickedEvent($event.control, $event.index )"
+                   (addSubInputClicked)="emitAddSubInputEvent($event)"
+                   (typeValueChange)="emitTypeValueChange($event)">
+</app-input-creator>

@@ -1,0 +1,14 @@
+<div class="creator-container">
+  <app-input-creator *ngFor="let input of inputsFormArray.controls; let i = index"
+                     [control]="input"
+                     [index]="i"
+                     [nestedLevel]="1"
+                     (deleteClicked)="deleteControl($event)"
+                     (addSubInputClicked)="addNewSubInputToControl($event)"
+                     (typeValueChange)="patchConditionsInChildren($event)">
+  </app-input-creator>
+</div>
+
+<button (click)="addNewInput()">
+
+</button>
